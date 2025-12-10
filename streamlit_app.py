@@ -4,6 +4,37 @@ import numpy as np
 from PIL import Image
 import cv2
 
+# GESTION DES DÉPENDANCES 
+import sys
+import subprocess
+
+def check_dependencies():
+    """Vérifie et installe les dépendances manquantes"""
+    try:
+        import tensorflow as tf
+        import numpy as np
+        from PIL import Image
+        import streamlit as st
+        print("✅ Toutes les dépendances sont installées")
+        return True
+    except ImportError as e:
+        print(f"⚠️ Dépendance manquante: {e}")
+        print("🔄 Tentative d'installation...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+            print("✅ Dépendances installées avec succès")
+            return True
+        except Exception as install_error:
+            print(f"❌ Échec d'installation: {install_error}")
+            return False
+
+# Exécuter la vérification
+if __name__ == "__main__":
+    if not check_dependencies():
+        print("❌ Impossible de résoudre les dépendances")
+        sys.exit(1)
+
+
 # Configuration de la page
 st.set_page_config(
     page_title="🌐 CLASSIFICATION DU CANCER DU SEIN ",
@@ -176,7 +207,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ========== NOUVELLE SECTION : SÉLECTION DU MODÈLE ==========
+#  NOUVELLE SECTION : SÉLECTION DU MODÈLE 
 st.markdown("""
     <div class="custom-title">🌐 CLASSIFICATION DU CANCER DU SEIN</div>
     <div class="custom-subtitle">Sélectionnez d'abord le modèle, puis importez votre image</div>
@@ -225,15 +256,14 @@ st.markdown('</div>', unsafe_allow_html=True)
 # CHARGEMENT DES MODÈLES 
 @st.cache_resource
 def load_cnn_model():
-    """Charger le modèle CNN"""
-    MODEL_PATH = "mon_CNN_final.h5"
+    MODEL_PATH = "models/mon_CNN_final.h5"
     return tf.keras.models.load_model(MODEL_PATH)
 
 @st.cache_resource
 def load_transfer_learning_model():
     """Charger le modèle Transfer Learning"""
     try:
-        TRANSFER_MODEL_PATH = "efficientnet_final_model.h5"  
+        TRANSFER_MODEL_PATH = "models/efficientnet_final_model.h5"
         return tf.keras.models.load_model(TRANSFER_MODEL_PATH)
     except Exception as e:
         st.error(f"❌ Erreur : {str(e)}")
