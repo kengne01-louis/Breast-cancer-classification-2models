@@ -234,7 +234,7 @@ def load_cnn_model():
 def load_transfer_learning_model():
     """Charger le modèle Transfer Learning"""
     try:
-        TRANSFER_MODEL_PATH = "models/efficientnet_final_model.keras"
+        TRANSFER_MODEL_PATH = "models/model.keras"
         return tf.keras.models.load_model(TRANSFER_MODEL_PATH)
     except Exception as e:
         st.error(f"❌ Erreur : {str(e)}")
