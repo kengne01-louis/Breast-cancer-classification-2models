@@ -227,14 +227,14 @@ st.markdown('</div>', unsafe_allow_html=True)
 # CHARGEMENT DES MODÈLES 
 @st.cache_resource
 def load_cnn_model():
-    MODEL_PATH = "mon_CNN_final.h5"
+    MODEL_PATH = "/models/mon_CNN_final.h5"
     return tf.keras.models.load_model(MODEL_PATH)
 
 @st.cache_resource
 def load_transfer_learning_model():
     """Charger le modèle Transfer Learning"""
     try:
-        TRANSFER_MODEL_PATH = "efficientnet_final_model.h5"
+        TRANSFER_MODEL_PATH = "/models/efficientnet_final_model.h5"
         return tf.keras.models.load_model(TRANSFER_MODEL_PATH)
     except Exception as e:
         st.error(f"❌ Erreur : {str(e)}")
