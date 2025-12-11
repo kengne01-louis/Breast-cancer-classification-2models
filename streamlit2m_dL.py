@@ -4,41 +4,12 @@ import numpy as np
 from PIL import Image
 import cv2
 
-# GESTION DES DÉPENDANCES 
-import sys
-import subprocess
-
-def check_dependencies():
-    """Vérifie et installe les dépendances manquantes"""
-    try:
-        import tensorflow as tf
-        import numpy as np
-        from PIL import Image
-        import streamlit as st
-        print("✅ Toutes les dépendances sont installées")
-        return True
-    except ImportError as e:
-        print(f"⚠️ Dépendance manquante: {e}")
-        print("🔄 Tentative d'installation...")
-        try:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-            print("✅ Dépendances installées avec succès")
-            return True
-        except Exception as install_error:
-            print(f"❌ Échec d'installation: {install_error}")
-            return False
-
-# Exécuter la vérification
-if __name__ == "__main__":
-    if not check_dependencies():
-        print("❌ Impossible de résoudre les dépendances")
-        sys.exit(1)
 
 
 # Configuration de la page
 st.set_page_config(
-    page_title="🌐 CLASSIFICATION DU CANCER DU SEIN ",
-    page_icon="🌐",
+    page_title="🟩 CLASSIFICATION DU CANCER DU SEIN ",
+    page_icon="🟩",
     layout="centered",
 )
 
@@ -209,7 +180,7 @@ st.markdown("""
 
 #  NOUVELLE SECTION : SÉLECTION DU MODÈLE 
 st.markdown("""
-    <div class="custom-title">🌐 CLASSIFICATION DU CANCER DU SEIN</div>
+    <div class="custom-title">🟩 CLASSIFICATION DU CANCER DU SEIN</div>
     <div class="custom-subtitle">Sélectionnez d'abord le modèle, puis importez votre image</div>
 """, unsafe_allow_html=True)
 
@@ -256,14 +227,14 @@ st.markdown('</div>', unsafe_allow_html=True)
 # CHARGEMENT DES MODÈLES 
 @st.cache_resource
 def load_cnn_model():
-    MODEL_PATH = "models/mon_CNN_final.h5"
+    MODEL_PATH = "mon_CNN_final.h5"
     return tf.keras.models.load_model(MODEL_PATH)
 
 @st.cache_resource
 def load_transfer_learning_model():
     """Charger le modèle Transfer Learning"""
     try:
-        TRANSFER_MODEL_PATH = "models/efficientnet_final_model.h5"
+        TRANSFER_MODEL_PATH = "efficientnet_final_model.h5"
         return tf.keras.models.load_model(TRANSFER_MODEL_PATH)
     except Exception as e:
         st.error(f"❌ Erreur : {str(e)}")
@@ -278,11 +249,11 @@ else:
     if st.session_state.selected_model == "CNN":
         model = load_cnn_model()
         model_name = "CNN"
-        input_size = (64, 64)  # Taille pour le modèle CNN
+        input_size = (64, 64)  
     else:
         model = load_transfer_learning_model()
         model_name = "Transfer Learning"
-        input_size = (224, 224)  # Taille pour EfficientNetB0
+        input_size = (224, 224)  
 
     # CLASSES 
     class_names = ["[0]=malignant", "[1]=normal"]
@@ -294,12 +265,12 @@ else:
             # Pour CNN : 64x64
             image = image.resize((64, 64))
         else:
-            # Pour Transfer Learning (EfficientNetB0) : 224x224
+            # Pour Transfer Learning (EfficientNetB0) 
             image = image.resize((224, 224))
         
         image = np.array(image) / 255.0
         
-        if image.shape[-1] == 4:  # RGBA -> RGB
+        if image.shape[-1] == 4:  
             image = image[..., :3]
         
         image = np.expand_dims(image, 0)
@@ -354,8 +325,6 @@ else:
                          border-radius: 10px; padding: 20px; border-left: 6px solid #f44336;">
                     <h2 style="color:#d32f2f;">⚠️ RÉSULTAT : {predicted_class}</h2>
                     <h3 style="color:#b71c1c;">Confiance : {confidence:.2f}%</h3>
-                    <p style="color:#d32f2f;"><strong>Modèle utilisé : {model_name}</strong></p>
-                    <p style="color:#d32f2f;"><small>Taille d'entrée : {input_size[0]}x{input_size[1]}</small></p>
                 </div>
             """, unsafe_allow_html=True)
         else:  # normal
@@ -364,8 +333,6 @@ else:
                          border-radius: 10px; padding: 20px; border-left: 6px solid #4caf50;">
                     <h2 style="color:#2e7d32;">✅ RÉSULTAT : {predicted_class}</h2>
                     <h3 style="color:#1b5e20;">Confiance : {confidence:.2f}%</h3>
-                    <p style="color:#2e7d32;"><strong>Modèle utilisé : {model_name}</strong></p>
-                    <p style="color:#2e7d32;"><small>Taille d'entrée : {input_size[0]}x{input_size[1]}</small></p>
                 </div>
             """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -399,7 +366,7 @@ else:
                          border-radius: 10px; border: 2px solid #f44336;">
                     <h2 style="color:#d32f2f;">⚠️⚠️ CONCLUSION ({model_name})</h2>
                     <h3 style="color:#b71c1c;">Votre sein est Cancereux.</h3>
-                    <p style="color:#d32f2f;">Analyse réalisée avec le modèle {model_name}</p>
+                    
                 </div>
             """, unsafe_allow_html=True)
         else:
@@ -408,7 +375,7 @@ else:
                          border-radius: 10px; border: 2px solid #4caf50;">
                     <h2 style="color:#2e7d32;">✅ CONCLUSION ({model_name})</h2>
                     <h3 style="color:#1b5e20;">Votre sein est en forme normal.</h3>
-                    <p style="color:#2e7d32;">Analyse réalisée avec le modèle {model_name}</p>
+                    
                 </div>
             """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
@@ -421,27 +388,22 @@ else:
                     <p style="color:#e65100;">
                         ⚠️⚠️ <b>IMPORTANT :</b> Consultez un professionnel de santé rapidement.
                     </p>
-                    <p style="color:#e65100;">
-                        <i>Résultat obtenu avec le modèle {model_name}</i>
-                    </p>
+                   
                 </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
                 <div style="padding: 15px; background: #f1f8e9; border-radius: 10px;">
                     <p style="color:#33691e;">
-                        ✅ <b>INFORMATION :</b> Continuez vos examens de routine.
-                    </p>
-                    <p style="color:#33691e;">
-                        <i>Résultat obtenu avec le modèle {model_name}</i>
+                        ✅ <b>INFORMATION :</b> Continuez vos examens pour rester en bonne santé.
                     </p>
                 </div>
             """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ========== ONGLETS POUR CHOIX DE MÉTHODE ==========
+    #ONGLETS POUR CHOIX DE MÉTHODE
 
-    # Créer des onglets pour choisir la méthode d'importation
+    #  choisir la méthode d'importation
     tab1, tab2 = st.tabs(["📁 **Importer une image**", "📸 **Prendre une photo**"])
 
     # Onglet 1 : Importer une image
@@ -458,10 +420,9 @@ else:
         else:
             st.markdown(f"""
                 <div style="text-align: center; padding: 40px;">
-                    <h3 style="color: #1565c0;">📁 Sélectionnez une image depuis votre appareil</h3>
-                    <p style="color: #666;">Format accepté : JPG, JPEG, PNG</p>
-                    <p style="color: #2196f3;"><strong>Modèle sélectionné : {model_name}</strong></p>
-                    <p style="color: #2196f3;"><small>Taille d'entrée : {input_size[0]}x{input_size[1]} pixels</small></p>
+                    <h3 style="color: #1565c0;">📁 Sélectionnez une image dépuis votre appareil</h3>
+                    <p style="color: #666;"> Importe l'image & Active la caméra </p>
+                    
                 </div>
             """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
