@@ -2,5 +2,5 @@ numpy
 opencv-python-headless
 Pillow
 streamlit
-tensorflow
+tensorflow==2.16.1
 tensorflow_intel
