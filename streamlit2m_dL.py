@@ -234,11 +234,11 @@ def load_cnn_model():
 def load_transfer_learning_model():
     """Charger le modèle Transfer Learning"""
     try:
-        TRANSFER_MODEL_PATH = "models/model.keras"
+        TRANSFER_MODEL_PATH = "models/efficentnet_final_model.keras"
         return tf.keras.models.load_model(TRANSFER_MODEL_PATH)
     except Exception as e:
         st.error(f"❌ Erreur : {str(e)}")
-        st.info("Veuillez vérifier que le fichier 'efficientnet_final_model.h5' existe.")
+        st.info("Veuillez vérifier que le fichier 'efficientnet_final_model.keras' existe.")
         st.stop()
 
 # Vérifier si un modèle est sélectionné avant de continuer
